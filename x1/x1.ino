@@ -22,6 +22,7 @@ void setup() {
   pinMode(D6, INPUT);
   pinMode(D3, INPUT);
   pinMode(D4, INPUT);
+  pinMode(D0, INPUT);
   count = 0;
 
   /* Change the contrast using the following API*/
@@ -47,7 +48,8 @@ void loop() {
   int btn1 = digitalRead(D6);
   int btn2 = !digitalRead(D3);
   int btn3 = !digitalRead(D4);
-  Serial.printf("BTN1: %i, BTN2: %i, BTN3: %i, COUNT: %i \n", btn1, btn2, btn3,count);
+  int btn4 = digitalRead(D0);
+  Serial.printf("BTN1: %i, BTN2: %i, BTN3: %i, BTN4: %i, COUNT: %i \n", btn1, btn2, btn3, btn4, count);
 
 
   if (btn1 == 1) {
@@ -78,6 +80,20 @@ void loop() {
       case 3:
         drawWiFiInfo();
         break;
+      case 5:
+        while(true){
+          int btn4_2 = digitalRead(D0);
+          drawBeeperMenu();
+
+
+          if(btn4_2 == 1){
+            break;
+          }
+        }
+        drawMiscMenu();
+        break;
+
+        //break;
       default:
         drawOptionsMenu();
     }
@@ -94,6 +110,14 @@ void loop() {
   if(btn3 == 1){
     switch (count){
       case 1:
+        drawMiscMenu();
+        break;
+    }
+  }
+
+  if(btn4 == 1){
+    switch (count){
+      case 1:
         drawHomeScreen();
         break;
       case 2:
@@ -103,6 +127,8 @@ void loop() {
         drawWifiMenu();
         break;
       case 3:
+        drawOptionsMenu();
+      case 5:
         drawOptionsMenu();
     }
   }
@@ -137,7 +163,9 @@ void drawOptionsMenu() {
   display.setCursor(1, 16);
   display.println("2) WiFi Menu");
   display.setCursor(1, 28);
-  display.println("3) Back");
+  display.println("3) Misc");
+  display.setCursor(1, 40);
+  display.println("4) Back");
   display.display();
 }
 
@@ -179,6 +207,8 @@ void drawWifiMenu(){
   display.setTextSize(1);
   display.setCursor(1, 4);
   display.println("1) Full WiFi Info");
+  display.setCursor(1, 16);
+  display.println("4) Back");
   display.display();
 }
 
@@ -196,4 +226,28 @@ void drawWiFiInfo(){
   display.setCursor(1, 40);
   display.println(ssid);
   display.display();
+}
+
+void drawMiscMenu(){
+  count = 5;
+  display.clearDisplay();
+  display.setCursor(1, 4);
+  display.println("1) Beeper");
+  display.setCursor(1, 16);
+  display.println("4) Back");
+  display.display();
+}
+
+void drawBeeperMenu(){
+  count = 6;
+  display.clearDisplay();
+  display.setCursor(1, 5);
+  display.println("BEEPER ACTIVE");
+  display.setCursor(1, 20);
+  display.println("Press (4) To stop");
+  display.display();
+  delay(1000);
+  display.clearDisplay();
+  display.display();
+  delay(1000);
 }
